@@ -1,14 +1,12 @@
 const Parser = require('./Parser')
 const Resolver = require('./Resolver')
 
-module.exports = class Type {
-  constructor(definition, validator) {
-    if (definition instanceof Object === false) {
-      throw new Error('definition must be atleast an empty object.')
-    }
-    this.name = 'CustomType'
+class Type {
+  constructor(definition, { validator, ref } = {}) {
+    this.name = 'Complex'
     this.definition = definition
-    this.validator = validator
+    if (validator) this.validator = validator
+    if (ref) this.ref = ref
     Parser.parse(this)
   }
 
@@ -17,6 +15,9 @@ module.exports = class Type {
   }
 
   static resolve(type, data) {
-    return Resolver.resolve(type, data)
+    const resolver = new Resolver()
+    return resolver.resolve(type, data)
   }
 }
+
+module.exports = Type
